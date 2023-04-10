@@ -72,12 +72,26 @@ void Encoding(){
   generateCode(pq.top(), "", codes);
 
   for(auto& it: str){
-    encode_out << codes[it];
+    encode_out << codes[it] ;
   }
   encode_out << endl;
+  for(auto& it: codes){
+    encode_out<<it.first<< " "<<it.second<<endl;
+  }
+  encode_in.close();
+  encode_out.close();
 }
+
+void Decoding(){
+  ifstream encode_in("huffman_encode.txt", ios::in);
+  ofstream decode_out("huffman_decode.txt", ios::out);
+
+  
+}
+
 int main()
 {
   Encoding();
+  Decoding();
   return 0;
 }
