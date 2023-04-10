@@ -54,12 +54,52 @@ vector<int> lzw_encoding(){
 }
 
 //Decoding 
-void lzw_decoding(){
+void lzw_decoding(vector<int>& output){
+  //writable output file
+  ofstream decode_out;
+  decode_out.open("lwz_decode.txt");
 
+  //decoding...
+  unordered_map<int, string>table;
+  for (int i = 0; i < 256; i++){
+    string ch = "";
+    ch += char(i);
+    table[i] = ch;
+  }
+
+  string decode = "";
+  int old = output[0], n;
+  string s = table[old];
+  // cout<<s<<endl;
+  decode += s;
+  string c = "";
+  c += s[0];
+  int code = 256;
+
+  //string decode
+
+  for (int i = 0; i < output.size() - 1; i++)
+  {
+    n = output[i + 1];
+    if(table.find(n) == table.end()){
+      s = table[old];
+      s = s + c;
+    }
+    else{
+      s = table[n];
+    }
+    decode += s;
+    c = "";
+    c += s[0];
+    table[code++] = table[old] + c;
+    old = n;
+  }
+  decode_out << decode << endl;
+  cout << decode << endl;
 }
 
 int main(){
   vector<int>output = lzw_encoding();
-  lzw_decoding();
+  lzw_decoding(output);
   return 0;
 }
