@@ -45,7 +45,7 @@ void Encoding(){
     
   while (encode_in.get(ch) && !encode_in.eof())
   {
-    cout << ch << endl;
+    //cout << ch << endl;
     frq[ch] = frq[ch] + 1;
     str += ch;
   }
@@ -83,10 +83,37 @@ void Encoding(){
 }
 
 void Decoding(){
-  ifstream encode_in("huffman_encode.txt", ios::in);
+  ifstream decode_in("huffman_encode.txt", ios::in);
   ofstream decode_out("huffman_decode.txt", ios::out);
 
-  
+  vector<char>ch;
+  string codeWord, line;
+  unordered_map<string, char> codes;
+  getline(decode_in, codeWord);
+
+  while(getline(decode_in, line)){
+    char key = line[0];
+    string code = line.substr(2);
+    codes[code] = key;
+  }
+
+  // cout<<codeWord<<endl;
+
+  // for(auto& c: codes){
+  //   cout << c.first << " " << c.second << endl;
+  // }
+
+  string c;
+  for (int i = 0; i < codeWord.size(); i++){
+    c += codeWord[i];
+    while(codes.find(c) == codes.end()){
+      c += codeWord[++i];
+    }
+    decode_out << codes[c];
+    cout << codes[c] << endl;
+    c = "";
+  }
+  decode_out << endl;
 }
 
 int main()
