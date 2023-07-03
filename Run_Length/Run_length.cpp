@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
 char str[1000000];
+
 string en = "", en1 = "", decn = "";
 int main()
 {
