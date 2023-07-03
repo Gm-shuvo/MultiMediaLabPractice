@@ -1,33 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-unordered_map < char , pair < double , double > > Range;
+unordered_map<char, pair<double, double>> Range;
 
-double generateCodeword(double low , double high){
+double generateCodeword(double low, double high)
+{
     int k = 1;
-    double code = 0.0 , x;
+    double code = 0.0, x;
 
-    while(code < low){
-        x = pow(2.0,-k);
+    while (code < low)
+    {
+        x = pow(2.0, -k);
 
-        if(code + x <= high)
+        if (code + x <= high)
             code = code + x;
 
         k = k + 1;
     }
-  
+
     return code;
 }
 
-double doEncoding(){
+double doEncoding()
+{
 
-    ifstream enc_in("./input_file.txt",ios::in);
-    ofstream enc_out("./encoded_file.txt",ios::out);
+    ifstream enc_in("./input_file.txt", ios::in);
+    ofstream enc_out("./encoded_file.txt", ios::out);
 
-    double low = 0.0 , high = 1.0 , range = 1.0;
+    double low = 0.0, high = 1.0, range = 1.0;
     char ch;
 
-    while(enc_in.get(ch) && !enc_in.eof()){
+    while (enc_in.get(ch) && !enc_in.eof())
+    {
         high = low + range * Range[ch].second;
         low = low + range * Range[ch].first;
         range = high - low;
@@ -35,7 +39,7 @@ double doEncoding(){
 
     // double codeword = generateCodeword(low , high);
     double codeword = (low + high) / 2;
-    
+
     enc_out << codeword;
 
     enc_in.close();
@@ -44,22 +48,21 @@ double doEncoding(){
     return codeword;
 }
 
-void doDecoding(double codeword){
+void doDecoding(double codeword)
+{
 
     // FILE *dec_in = fopen("./encoded_file.txt","r");
-    ofstream dec_out("./decoded_file.txt",ios::out);
+    ofstream dec_out("./decoded_file.txt", ios::out);
 
-    double low , high , range;
+    double low, high, range;
     char s;
-    // char tmp[100];
 
-    // fgets(tmp,100,dec_in);
-
-    // codeword = strtod(tmp,NULL);
-
-    do{
-        for(auto &itr : Range){
-            if(itr.second.first <= codeword && codeword < itr.second.second){
+    do
+    {
+        for (auto &itr : Range)
+        {
+            if (itr.second.first <= codeword && codeword < itr.second.second)
+            {
                 s = itr.first;
                 low = itr.second.first;
                 high = itr.second.second;
@@ -69,36 +72,44 @@ void doDecoding(double codeword){
             }
         }
         dec_out.put(s);
-    } while(s != '$');
+    } while (s != '$');
 
     dec_out.close();
-    
 }
 
-int main(){
+int main()
+{
 
-    ifstream fin("./input_file.txt",ios::in);
-    vector < char > s;
+    ifstream fin("./input_file.txt", ios::in);
+    vector<char> s;
     char ch;
 
-    unordered_map < char , int > freq , mark;
+    unordered_map<char, int> freq, mark;
     double low = 0.0;
-    
-    while(fin.get(ch) && !fin.eof()){
+
+    while (fin.get(ch) && !fin.eof())
+    {
         s.push_back(ch);
         freq[ch] = freq[ch] + 1;
-        if(ch == '$')
+        if (ch == '$')
             break;
     }
 
-    for(auto &itr : s){
+    for (auto &itr : s)
+    {
         double p = (double)freq[itr] / (double)s.size();
-        if (!mark[itr]){
-            Range[itr] = {low,low+p};
+        // cout<<p<<endl;
+        if (!mark[itr])
+        {
+            Range[itr] = {low, low + p};
             low += p;
             mark[itr] = 1;
         }
     }
+
+    // for(auto x: Range){
+    // cout<< x.first << "==" << x.second.first << '|' << x.second.second<<endl;
+    // }
 
     double value = doEncoding();
     doDecoding(value);
